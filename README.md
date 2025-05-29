@@ -6,9 +6,11 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 
 0. Enable Wake On AC and set a battery charge limit at 70%
 
+1. Disable warnings about the power adapter having insufficient wattage
+
 ## Install
 
-1. Booting from the install disk for Debian 12 (non-free drivers now included by default), proceed through the non-graphical install process.
+2. Booting from the install disk for Debian 12 (non-free drivers now included by default), proceed through the non-graphical install process.
     * Time zone, keyboard, and language are self-explanatory
     * Disable the root user (leave the root password empty)
     * The hostname should be `kenny-auxiliary`
@@ -17,11 +19,9 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 
 ## Post-install
 
-2. Install `git` with the command `sudo apt install git`
+3. Install `git` with the command `sudo apt install git`
 
-3. Clone this repository with the command `git clone https://github.com/colonelwatch/auxiliary-dotfiles .dotfiles`, call `cd .dotfiles && bash ./bootstrap.sh`
-
-4. Authorize thunderbolt dock through `boltctl`
+4. Clone this repository with the command `git clone https://github.com/colonelwatch/auxiliary-dotfiles .dotfiles`, call `cd .dotfiles && bash ./bootstrap.sh`
 
 5. Restart
 
