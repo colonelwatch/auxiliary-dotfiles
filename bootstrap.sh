@@ -44,7 +44,7 @@ sudo nmcli device wifi connect "$SSID" password "$PSK"
 sleep 10 # wait for wifi to connect
 
 sudo apt install -y \
-    bolt nvidia-driver systemd-zram
+    systemd-zram
 
 # install config files
 sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
