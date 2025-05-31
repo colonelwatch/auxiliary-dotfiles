@@ -12,9 +12,17 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 
 2. Booting from the install disk for Debian 12 (non-free drivers now included by default), proceed through the non-graphical install process.
     * Time zone, keyboard, and language are self-explanatory
-    * Disable the root user (leave the root password empty)
     * The hostname should be `kenny-auxiliary`
-    * Nuke all partitions, single-partition install, and no swap partition (delete it after guided partitioning but before continuing, proceed through the warning about not designating swap)
+    * Disable the root user (leave the root password empty)
+    * Set up the disk as follows:
+        * Select a guided entire-disk install
+        * Delete both the main and swap partitions
+        * Create a new partition in the left-behind free space, ensuring that:
+            * the file system is btrfs,
+            * the partition *is* formatted, and
+            * the mount point is `/`
+        * Resize the main partition so that it reaches the end of the disk
+        * Finish setup, and dismiss the warning about not designating swap
     * Turn off all desktop environments and turn on the SSH server
 
 ## Post-install
