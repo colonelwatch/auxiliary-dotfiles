@@ -29,19 +29,18 @@ SSID=$(sudo cat /etc/network/interfaces | grep wpa-ssid | sed 's/\twpa-ssid *//'
 PSK=$(sudo cat /etc/network/interfaces | grep wpa-psk | sed 's/\twpa-psk *//')
 
 # install NetworkManager and resolved (for mDNS features) and stop networking.service from using the wifi
+temp=$(mktemp)
 sudo apt install -y network-manager systemd-resolved
-sudo cat /etc/network/interfaces | head -8 > ./interfaces # prepare interfaces file without wifi config
-cat ./interfaces | sudo tee /etc/network/interfaces
-rm ./interfaces # remove interfaces file
-sudo systemctl restart networking wpa_supplicant
-sudo systemctl restart NetworkManager systemd-resolved
-sudo nmcli radio wifi off
-sudo nmcli radio wifi on
-sleep 10 # wait for wifi to be ready
+sudo cat /etc/network/interfaces | head -8 > "$temp"  # prepare interfaces files without wifi config
+sudo mv "$temp" /etc/network/interfaces
+sudo systemctl disable networking
+sudo systemctl stop networking
+sudo systemctl restart systemd-resolved wpa_supplicant
+sudo systemctl restart NetworkManager
 
 # connect it to the previously recorded wifi network
+sudo nmcli device wifi rescan
 sudo nmcli device wifi connect "$SSID" password "$PSK"
-sleep 10 # wait for wifi to connect
 
 sudo apt install -y \
     systemd-zram
