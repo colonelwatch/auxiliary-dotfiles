@@ -39,7 +39,7 @@ sudo systemctl restart systemd-resolved wpa_supplicant
 sudo systemctl restart NetworkManager
 
 # connect it to the previously recorded wifi network
-sudo nmcli device wifi rescan
+sleep 10 # wait for wifi to be ready
 sudo nmcli device wifi connect "$SSID" password "$PSK"
 
 sudo apt install -y \
