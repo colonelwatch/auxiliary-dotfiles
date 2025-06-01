@@ -56,11 +56,7 @@ function do_root {
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
-
-    # use the new config files
-    sudo update-grub
-    sudo systemctl restart systemd-logind
-    sudo systemctl restart NetworkManager
+    sudo update-grub  # grub config needs to be further applied
 
     install_utilities
 }
