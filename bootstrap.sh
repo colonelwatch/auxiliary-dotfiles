@@ -47,7 +47,9 @@ function do_root {
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
-    sudo update-grub  # grub config needs to be further applied
+
+    # other setup
+    sudo update-grub
 }
 
 
