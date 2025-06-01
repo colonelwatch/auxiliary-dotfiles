@@ -29,6 +29,6 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 
 3. Install `git` with the command `sudo apt install git`
 
-4. Clone this repository with the command `git clone https://github.com/colonelwatch/auxiliary-dotfiles .dotfiles`, call `cd .dotfiles && bash ./bootstrap.sh`
+4. Clone this repository with the command `git clone https://github.com/colonelwatch/auxiliary-dotfiles .dotfiles`, call `cd .dotfiles && ./bootstrap.sh`
 
 5. Restart

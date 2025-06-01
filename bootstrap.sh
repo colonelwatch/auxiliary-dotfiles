@@ -1,3 +1,6 @@
+#!/bin/bash -e
+
+
 function do_setup {
     # update sources.list and then do the usual update-upgrade command
     sudo cp root/etc/apt/sources.list /etc/apt/sources.list
