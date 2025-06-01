@@ -53,14 +53,23 @@ function do_root {
 }
 
 
-function do_user {
+function get_miniconda {
+    if [ -d ~/miniconda3 ]; then
+        source ~/miniconda3/bin/activate
+        conda update -n base -c defaults conda
+        return 0
+    fi 
+
     # download and execute miniconda install script
-    if [ ! -d ~/miniconda3 ]; then
-        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  \
-            -O ~/miniconda3_install.sh
-        bash ~/miniconda3_install.sh -b
-        rm ~/miniconda3_install.sh
-    fi
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  \
+        -O ~/miniconda3_install.sh
+    bash ~/miniconda3_install.sh -b
+    rm ~/miniconda3_install.sh
+}
+
+
+function do_user {
+    get_miniconda
 }
 
 
