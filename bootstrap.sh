@@ -6,6 +6,10 @@ function do_setup {
 
 
 function do_networking {
+    if dpkg-query -Wf'${db:Status-abbrev}' network-manager | grep -q '^i'; then
+        return 0  # network-manager is already installed, so skip
+    fi
+
     # install packages for NetworkManager and resolved (for mDNS features)
     sudo apt install -y network-manager systemd-resolved
 
@@ -61,9 +65,12 @@ function do_root {
 
 function do_user {
     # download and execute miniconda install script
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3_install.sh
-    bash ~/miniconda3_install.sh -b
-    rm ~/miniconda3_install.sh
+    if [ ! -d ~/miniconda3 ]; then
+        wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  \
+            -O ~/miniconda3_install.sh
+        bash ~/miniconda3_install.sh -b
+        rm ~/miniconda3_install.sh
+    fi
 }
 
 
