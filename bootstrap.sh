@@ -33,8 +33,6 @@ if [ ! "$PWD" = "$HOME/.dotfiles" ]; then
     exit 1
 fi
 
-sudo mkdir -p --mode=0755 /usr/share/keyrings
-
 # update sources.list
 sudo cp root/etc/apt/sources.list /etc/apt/sources.list
 
