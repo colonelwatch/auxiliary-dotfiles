@@ -35,11 +35,6 @@ fi
 
 sudo mkdir -p --mode=0755 /usr/share/keyrings
 
-# add zram-generator repo
-sudo wget https://nabijaczleweli.xyz/pgp.txt -O /etc/apt/keyrings/nabijaczleweli.asc
-echo 'deb [signed-by=/etc/apt/keyrings/nabijaczleweli.asc] https://debian.nabijaczleweli.xyz bookworm main' | sudo tee -a /etc/apt/sources.list.d/zram-generator.list
-echo 'deb-src [signed-by=/etc/apt/keyrings/nabijaczleweli.asc] https://debian.nabijaczleweli.xyz bookworm main' | sudo tee -a /etc/apt/sources.list.d/zram-generator.list
-
 # update sources.list
 sudo cp root/etc/apt/sources.list /etc/apt/sources.list
 
@@ -54,7 +49,7 @@ sudo apt update && sudo apt upgrade -y
 do_networking
 
 sudo apt install -y \
-    systemd-zram
+    systemd-zram-generator
 
 # install config files
 sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
