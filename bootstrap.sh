@@ -25,10 +25,9 @@ function do_networking {
     sudo cat /etc/network/interfaces | head -8 > "$temp"
     sudo mv "$temp" /etc/network/interfaces
 
-    # Apply transition by stopping and disabling networking.service and then restarting
+    # Apply transition by restarting networking.service and then restarting
     # NetworkManager (resolved and NetworkManager are already enabled upon install)
-    sudo systemctl disable networking
-    sudo systemctl stop networking
+    sudo systemctl restart networking
     sudo systemctl restart systemd-resolved wpa_supplicant  # first, dependencies of NM
     sudo systemctl restart NetworkManager
 
