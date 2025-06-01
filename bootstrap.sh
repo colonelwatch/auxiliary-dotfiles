@@ -38,27 +38,16 @@ function do_networking {
 }
 
 
-function install_services {
-    sudo apt install -y \
-        systemd-zram-generator
-}
-
-
-function install_utilities {
-    sudo apt install -y \
-        build-essential htop pkg-config rsync vim
-}
-
-
 function do_root {
     do_networking
-    install_services
+
+    # install services and utilities
+    sudo apt install -y systemd-zram-generator
+    sudo apt install -y build-essential htop pkg-config rsync vim
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
     sudo update-grub  # grub config needs to be further applied
-
-    install_utilities
 }
 
 
