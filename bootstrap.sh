@@ -1,3 +1,30 @@
+function do_networking {
+    # install packages for NetworkManager and resolved (for mDNS features)
+    sudo apt install -y network-manager systemd-resolved
+
+    # record wifi config from /etc/network/interfaces
+    ssid=$(sudo cat /etc/network/interfaces | grep wpa-ssid | sed 's/\twpa-ssid *//')
+    psk=$(sudo cat /etc/network/interfaces | grep wpa-psk | sed 's/\twpa-psk *//')
+
+    # delete wifi config, thus giving control from networking.service to NetworkManager
+    temp=$(mktemp)
+    sudo cat /etc/network/interfaces | head -8 > "$temp"
+    sudo mv "$temp" /etc/network/interfaces
+
+    # Apply transition by stopping and disabling networking.service and then restarting
+    # NetworkManager (resolved and NetworkManager are already enabled upon install)
+    sudo systemctl disable networking
+    sudo systemctl stop networking
+    sudo systemctl restart systemd-resolved wpa_supplicant  # first, dependencies of NM
+    sudo systemctl restart NetworkManager
+
+    # connect it to the previously recorded wifi network
+    sleep 10 # wait for wifi to be ready
+    sudo nmcli device wifi connect "$ssid" password "$psk"
+}
+
+
+
 # <SETUP>
 
 # check if pwd is ~/.dotfiles
@@ -24,23 +51,7 @@ sudo apt update && sudo apt upgrade -y
 
 # <ROOT>
 
-# record wifi config from /etc/network/interfaces
-SSID=$(sudo cat /etc/network/interfaces | grep wpa-ssid | sed 's/\twpa-ssid *//')
-PSK=$(sudo cat /etc/network/interfaces | grep wpa-psk | sed 's/\twpa-psk *//')
-
-# install NetworkManager and resolved (for mDNS features) and stop networking.service from using the wifi
-temp=$(mktemp)
-sudo apt install -y network-manager systemd-resolved
-sudo cat /etc/network/interfaces | head -8 > "$temp"  # prepare interfaces files without wifi config
-sudo mv "$temp" /etc/network/interfaces
-sudo systemctl disable networking
-sudo systemctl stop networking
-sudo systemctl restart systemd-resolved wpa_supplicant
-sudo systemctl restart NetworkManager
-
-# connect it to the previously recorded wifi network
-sleep 10 # wait for wifi to be ready
-sudo nmcli device wifi connect "$SSID" password "$PSK"
+do_networking
 
 sudo apt install -y \
     systemd-zram
