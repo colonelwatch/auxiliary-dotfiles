@@ -1,3 +1,10 @@
+function do_setup {
+    # update sources.list and then do the usual update-upgrade command
+    sudo cp root/etc/apt/sources.list /etc/apt/sources.list
+    sudo apt update && sudo apt upgrade -y
+}
+
+
 function do_networking {
     # install packages for NetworkManager and resolved (for mDNS features)
     sudo apt install -y network-manager systemd-resolved
@@ -24,8 +31,41 @@ function do_networking {
 }
 
 
+function install_services {
+    sudo apt install -y \
+        systemd-zram-generator
+}
 
-# <SETUP>
+
+function install_utilities {
+    sudo apt install -y \
+        build-essential htop pkg-config rsync vim
+}
+
+
+function do_root {
+    do_networking
+    install_services
+
+    # install config files
+    sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
+
+    # use the new config files
+    sudo update-grub
+    sudo systemctl restart systemd-logind
+    sudo systemctl restart NetworkManager
+
+    install_utilities
+}
+
+
+function do_user {
+    # download and execute miniconda install script
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3_install.sh
+    bash ~/miniconda3_install.sh -b
+    rm ~/miniconda3_install.sh
+}
+
 
 # check if pwd is ~/.dotfiles
 if [ ! "$PWD" = "$HOME/.dotfiles" ]; then
@@ -33,48 +73,6 @@ if [ ! "$PWD" = "$HOME/.dotfiles" ]; then
     exit 1
 fi
 
-# update sources.list
-sudo cp root/etc/apt/sources.list /etc/apt/sources.list
-
-sudo apt update && sudo apt upgrade -y
-
-# </SETUP>
-
-
-
-# <ROOT>
-
-do_networking
-
-sudo apt install -y \
-    systemd-zram-generator
-
-# install config files
-sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
-
-# use the new config files
-sudo update-grub
-sudo systemctl restart systemd-logind
-sudo systemctl restart NetworkManager
-
-# </ROOT>
-
-
-
-# <USER>
-
-sudo apt install -y \
-    build-essential htop pkg-config rsync vim
-
-# download and execute miniconda install script
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3_install.sh
-bash ~/miniconda3_install.sh -b # conda will soon be intialized by importing the fish config
-rm ~/miniconda3_install.sh
-
-# </USER>
-
-
-
-# <CLEANUP>
-
-# </CLEANUP>
+do_setup
+do_root
+do_user
