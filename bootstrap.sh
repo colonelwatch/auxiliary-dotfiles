@@ -64,16 +64,12 @@ sudo systemctl restart NetworkManager
 # <USER>
 
 sudo apt install -y \
-    build-essential ffmpeg fish htop parallel pkg-config rsync screen vim
+    build-essential htop pkg-config rsync vim
 
 # download and execute miniconda install script
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3_install.sh
 bash ~/miniconda3_install.sh -b # conda will soon be intialized by importing the fish config
 rm ~/miniconda3_install.sh
-
-# install config files
-mkdir -p ~/.config
-ln -s -f $PWD/config/* ~/.config/
 
 # </USER>
 

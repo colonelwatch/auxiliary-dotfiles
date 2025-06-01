@@ -32,9 +32,3 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 4. Clone this repository with the command `git clone https://github.com/colonelwatch/auxiliary-dotfiles .dotfiles`, call `cd .dotfiles && bash ./bootstrap.sh`
 
 5. Restart
-
-## Post-bootstrap
-
-6. SSH with tunneling into the server by running the command `ssh -L 53682:localhost:53682 kenny@kenny-auxiliary` on another machine with a web browser
-
-7. Call `cd .dotfiles && bash ./recovery.sh`, which includes manual prompts and recovery
