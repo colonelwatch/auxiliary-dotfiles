@@ -43,7 +43,7 @@ function do_root {
 
     # install services and utilities
     sudo apt install -y systemd-zram-generator
-    sudo apt install -y build-essential htop pkg-config rsync vim
+    sudo apt install -y build-essential htop rsync vim
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
