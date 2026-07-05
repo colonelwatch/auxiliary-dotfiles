@@ -5,12 +5,18 @@ do_setup() {
     # update sources.list and then do the usual update-upgrade command
     sudo cp root/etc/apt/sources.list /etc/apt/sources.list
     sudo apt update && sudo apt upgrade -y
+
+    # some of the script needs access to curl first
+    sudo apt install curl
 }
 
 
 do_root() {
+    # install liquorix kernel
+    curl -s 'https://liquorix.net/install-liquorix.sh' | sudo bash
+
     # install services
-    sudo apt install -y systemd-zram-generator
+    sudo apt install -y linux-cpupower systemd-zram-generator
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
