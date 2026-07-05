@@ -8,7 +8,21 @@ do_setup() {
 }
 
 
-do_networking() {
+do_root() {
+    __do_networking
+
+    # install services and utilities
+    sudo apt install -y systemd-zram-generator
+
+    # install config files
+    sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
+
+    # other setup
+    sudo update-grub
+}
+
+
+__do_networking() {
     if dpkg-query -Wf'${db:Status-abbrev}' network-manager | grep -q '^i'; then
         return 0  # network-manager is already installed, so skip
     fi
@@ -38,20 +52,6 @@ do_networking() {
     # connect it to the previously recorded wifi network
     sleep 10 # wait for wifi to be ready
     sudo nmcli device wifi connect "$ssid" password "$psk"
-}
-
-
-do_root() {
-    do_networking
-
-    # install services and utilities
-    sudo apt install -y systemd-zram-generator
-
-    # install config files
-    sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
-
-    # other setup
-    sudo update-grub
 }
 
 
