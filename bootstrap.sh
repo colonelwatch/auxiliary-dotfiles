@@ -31,6 +31,10 @@ do_networking() {
     sudo systemctl restart systemd-resolved wpa_supplicant  # first, dependencies of NM
     sudo systemctl restart NetworkManager
 
+    if [ -z "$ssid" -o -z "$psk" ]; then
+        return 0  # no WiFi network to connext to
+    fi
+
     # connect it to the previously recorded wifi network
     sleep 10 # wait for wifi to be ready
     sudo nmcli device wifi connect "$ssid" password "$psk"
