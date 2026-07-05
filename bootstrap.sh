@@ -9,9 +9,7 @@ do_setup() {
 
 
 do_root() {
-    __do_networking
-
-    # install services and utilities
+    # install services
     sudo apt install -y systemd-zram-generator
 
     # install config files
@@ -19,6 +17,7 @@ do_root() {
 
     # other setup
     sudo update-grub
+    __do_networking
 }
 
 
