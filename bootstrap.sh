@@ -46,8 +46,6 @@ do_root() {
 
     # install services and utilities
     sudo apt install -y systemd-zram-generator
-    sudo apt install -y \
-        bats bats-assert bats-support bats-file build-essential htop rsync vim
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
@@ -57,24 +55,26 @@ do_root() {
 }
 
 
-get_miniconda() {
-    if [ -d ~/miniconda3 ]; then
-        source ~/miniconda3/bin/activate && conda deactivate
-        conda update -y -n base -c defaults conda
-        return 0
-    fi 
-
-    # download and execute miniconda install script
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh  \
-        -O ~/miniconda3_install.sh
-    bash ~/miniconda3_install.sh -b
-    rm ~/miniconda3_install.sh
-}
-
-
 do_user() {
-    get_miniconda
+    # install applications
+    sudo apt install \
+        bats bats-assert bats-support bats-file build-essential cmake htop  \
+        rsync vim
+
+    __install_neovim
 }
+
+
+__install_neovim() (
+    tmpdir=$(mktemp -d)
+    cd "$tmpdir"
+    git clone --depth 1 -b stable https://github.com/neovim/neovim
+    cd neovim
+    make CMAKE_BUILD_TYPE=Release                               \
+        CMAKE_C_FLAGS_RELEASE="-O3 -DNDEBUG -march=native"      \
+        CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/.local"
+    make install
+)
 
 
 # check if pwd is ~/.dotfiles
