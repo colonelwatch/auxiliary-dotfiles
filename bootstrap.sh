@@ -1,14 +1,14 @@
 #!/bin/bash -e
 
 
-function do_setup {
+do_setup() {
     # update sources.list and then do the usual update-upgrade command
     sudo cp root/etc/apt/sources.list /etc/apt/sources.list
     sudo apt update && sudo apt upgrade -y
 }
 
 
-function do_networking {
+do_networking() {
     if dpkg-query -Wf'${db:Status-abbrev}' network-manager | grep -q '^i'; then
         return 0  # network-manager is already installed, so skip
     fi
@@ -37,7 +37,7 @@ function do_networking {
 }
 
 
-function do_root {
+do_root() {
     do_networking
 
     # install services and utilities
@@ -53,7 +53,7 @@ function do_root {
 }
 
 
-function get_miniconda {
+get_miniconda() {
     if [ -d ~/miniconda3 ]; then
         source ~/miniconda3/bin/activate && conda deactivate
         conda update -y -n base -c defaults conda
@@ -68,7 +68,7 @@ function get_miniconda {
 }
 
 
-function do_user {
+do_user() {
     get_miniconda
 }
 
