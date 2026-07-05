@@ -7,7 +7,7 @@ do_setup() {
     sudo apt update && sudo apt upgrade -y
 
     # some of the script needs access to curl first
-    sudo apt install curl
+    sudo apt install -y curl
 }
 
 
@@ -62,7 +62,7 @@ __do_networking() {
 
 do_user() {
     # install applications
-    sudo apt install \
+    sudo apt install -y \
         bats bats-assert bats-support bats-file build-essential cmake htop  \
         rsync vim
 
