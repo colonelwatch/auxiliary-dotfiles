@@ -21,6 +21,11 @@ do_root() {
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
 
+    # enable services
+    sudo systemctl daemon-reload
+    sudo systemctl enable   \
+        cpupower-performance.service
+
     # other setup
     sudo update-grub
     __do_networking
