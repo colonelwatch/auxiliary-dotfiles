@@ -6,8 +6,8 @@ do_setup() {
     sudo cp root/etc/apt/sources.list /etc/apt/sources.list
     sudo apt update && sudo apt upgrade -y
 
-    # some of the script needs access to curl first
-    sudo apt install -y curl
+    # some of the script needs access to curl and unzip first
+    sudo apt install -y curl unzip
 }
 
 
@@ -61,12 +61,35 @@ __do_networking() {
 
 
 do_user() {
+    # install package managers
+    sudo apt install -y pipx  # pipx
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs |     \
+        sh -s -- -y && . "$HOME/.cargo/env"  # cargo
+    curl -fsSL https://fnm.vercel.app/install |     \
+        bash -s -- --skip-shell && __source_fnm  # fnm
+
     # install applications
     sudo apt install -y \
-        bats bats-assert bats-support bats-file build-essential cmake htop  \
-        rsync vim
+        bats bats-assert bats-support bats-file build-essential cmake clang \
+        fd-find htop jq ripgrep rsync vim
+    pipx install compiledb
+    cargo install --locked tree-sitter-cli yazi-build
+    fnm install --lts  # nodejs and npm
 
     __install_neovim
+
+    # install config files
+    mkdir -p ~/.config
+    ln -s -f $PWD/home/.config/* ~/.config/
+}
+
+
+__source_fnm() {
+    FNM_PATH="/home/kenny/.local/share/fnm"
+    if [ -d "$FNM_PATH" ]; then
+      export PATH="$FNM_PATH:$PATH"
+      eval "$(fnm env --shell bash)"
+    fi
 }
 
 
