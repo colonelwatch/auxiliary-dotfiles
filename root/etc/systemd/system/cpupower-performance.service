@@ -1,0 +1,11 @@
+[Unit]
+Description=Configure processor power for maximum performance.
+
+[Service]
+Type=oneshot
+ExecStart=cpupower frequency-set -g performance
+ExecStart=cpupower set -b 0
+# ExecStart=cpupower set -e performance
+
+[Install]
+WantedBy=multi-user.target
