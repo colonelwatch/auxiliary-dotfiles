@@ -86,7 +86,7 @@ do_user() {
         bats bats-assert bats-support bats-file build-essential cmake clang \
         fd-find fish git-lfs htop jq man-db ripgrep rsync vim
     pipx install compiledb
-    pyenv install 3.12 3.13 3.13t 3.14 3.14t
+    pyenv install --skip-existing 3.12 3.13 3.13t 3.14 3.14t
     cargo install --locked tree-sitter-cli yazi-build macchina
     fnm install --lts  # nodejs and npm
     __install_neovim
