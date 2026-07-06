@@ -81,7 +81,7 @@ do_user() {
     # install applications
     sudo apt install -y \
         bats bats-assert bats-support bats-file build-essential cmake clang \
-        fd-find htop jq man-db ripgrep rsync vim
+        fd-find fish htop jq man-db ripgrep rsync vim
     pipx install compiledb
     pyenv install 3.12 3.13 3.13t 3.14 3.14t
     cargo install --locked tree-sitter-cli yazi-build
