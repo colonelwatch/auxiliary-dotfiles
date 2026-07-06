@@ -2,8 +2,6 @@
 
 
 do_setup() {
-    # update sources.list and then do the usual update-upgrade command
-    sudo cp root/etc/apt/sources.list /etc/apt/sources.list
     sudo apt update && sudo apt upgrade -y
 
     # some of the script needs access to curl and unzip first
