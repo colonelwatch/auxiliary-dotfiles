@@ -53,13 +53,16 @@ __do_network_manager_changeover() {
     sudo systemctl restart systemd-resolved wpa_supplicant  # first, dependencies of NM
     sudo systemctl restart NetworkManager
 
-    if [ -z "$ssid" -o -z "$psk" ]; then
-        return 0  # no WiFi network to connext to
+    sleep 10 # wait for NetworkManager to be ready
+
+    if [ -n "$ssid" -a -n "$psk" ]; then
+        sudo nmcli device wifi connect "$ssid" password "$psk"
     fi
 
-    # connect it to the previously recorded wifi network
-    sleep 10 # wait for wifi to be ready
-    sudo nmcli device wifi connect "$ssid" password "$psk"
+    if ! ping -c 1 google.com; then
+        echo "no internet connection, check nmtui and run again" 1>&2
+        return 1
+    fi
 }
 
 
