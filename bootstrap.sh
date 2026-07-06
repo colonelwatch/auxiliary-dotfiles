@@ -74,7 +74,7 @@ do_user() {
     # install applications
     sudo apt install -y \
         bats bats-assert bats-support bats-file build-essential cmake clang \
-        fd-find htop jq ripgrep rsync vim
+        fd-find htop jq man-db ripgrep rsync vim
     pipx install compiledb
     cargo install --locked tree-sitter-cli yazi-build
     fnm install --lts  # nodejs and npm
