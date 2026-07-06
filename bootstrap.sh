@@ -10,6 +10,10 @@ do_setup() {
 
 
 do_root() {
+    # use NetworkManager and resolved (for mDNS features)
+    sudo apt install -y network-manager systemd-resolved
+    __do_network_manager_changeover
+
     # install liquorix kernel
     curl -s 'https://liquorix.net/install-liquorix.sh' | sudo bash
 
@@ -26,17 +30,13 @@ do_root() {
 
     # other setup
     sudo update-grub
-    __do_networking
 }
 
 
-__do_networking() {
+__do_network_manager_changeover() {
     if dpkg-query -Wf'${db:Status-abbrev}' network-manager | grep -q '^i'; then
         return 0  # network-manager is already installed, so skip
     fi
-
-    # install packages for NetworkManager and resolved (for mDNS features)
-    sudo apt install -y network-manager systemd-resolved
 
     # record wifi config from /etc/network/interfaces
     ssid=$(sudo cat /etc/network/interfaces | grep wpa-ssid | sed 's/\twpa-ssid *//')
