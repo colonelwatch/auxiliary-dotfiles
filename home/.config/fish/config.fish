@@ -3,3 +3,13 @@ if status is-interactive
 end
 
 set -gx EDITOR nvim
+
+# pyenv
+set -gx PYENV_ROOT "$HOME/.pyenv"
+fish_add_path -g "$PYENV_ROOT/bin"
+pyenv init - fish | source
+
+# pyenv build options
+set -gx PYTHON_CONFIGURE_OPTS '--enable-optimizations --with-lto'
+set -gx PYTHON_CFLAGS '-march=native -mtune=native'
+set -gx MAKE_OPTS "-j$(nproc)"

@@ -66,16 +66,24 @@ __do_networking() {
 do_user() {
     # install package managers
     sudo apt install -y pipx  # pipx
+    curl -fsSL https://pyenv.run | bash && __source_pyenv  # pyenv
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs |     \
         sh -s -- -y && . "$HOME/.cargo/env"  # cargo
     curl -fsSL https://fnm.vercel.app/install |     \
         bash -s -- --skip-shell && __source_fnm  # fnm
+
+    # install pyenv dependencies (Python build dependencies)
+    sudo apt install -y \
+        make build-essential libssl-dev zlib1g-dev libbz2-dev               \
+        libreadline-dev libsqlite3-dev curl git libncursesw5-dev xz-utils   \
+        tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev libzstd-dev
 
     # install applications
     sudo apt install -y \
         bats bats-assert bats-support bats-file build-essential cmake clang \
         fd-find htop jq man-db ripgrep rsync vim
     pipx install compiledb
+    pyenv install 3.12 3.13 3.13t 3.14 3.14t
     cargo install --locked tree-sitter-cli yazi-build
     fnm install --lts  # nodejs and npm
 
@@ -84,6 +92,19 @@ do_user() {
     # install config files
     mkdir -p ~/.config
     ln -s -f $PWD/home/.config/* ~/.config/
+}
+
+
+__source_pyenv() {
+    export PYENV_ROOT="$HOME/.pyenv"
+    if [ -d "$PYENV_ROOT/bin" ]; then
+        export PATH="$PYENV_ROOT/bin:$PATH"
+    fi
+    eval "$(pyenv init - bash)"
+
+    export PYTHON_CONFIGURE_OPTS='--enable-optimizations --with-lto'
+    export PYTHON_CFLAGS='-march=native -mtune=native'
+    export MAKE_OPTS="-j$(nproc)"
 }
 
 
