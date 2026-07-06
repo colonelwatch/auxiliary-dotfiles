@@ -4,7 +4,10 @@ if status is-interactive
     fish_config theme choose "Solarized Light"
 end
 
+set fish_greeting
+
 set -gx EDITOR nvim
+fish_add_path -g "$HOME/.local/bin"
 
 # pyenv
 set -gx PYENV_ROOT "$HOME/.pyenv"
