@@ -2,10 +2,12 @@
 
 
 do_setup() {
-    sudo apt update && sudo apt upgrade -y
-
     # some of the script needs access to curl and unzip first
     sudo apt install -y curl unzip
+
+    # update sources and do an apt update/upgrade
+    sudo cp root/etc/apt/sources.list /etc/apt/
+    sudo apt update && sudo apt upgrade -y
 }
 
 
@@ -14,11 +16,11 @@ do_root() {
     sudo apt install -y network-manager systemd-resolved
     __do_network_manager_changeover
 
-    # install liquorix kernel
-    curl -s 'https://liquorix.net/install-liquorix.sh' | sudo bash
+    # install kernel and drivers
+    sudo apt install -y nvidia-open-kernel-dkms nvidia-driver
 
     # install services
-    sudo apt install -y linux-cpupower systemd-zram-generator
+    sudo apt install -y bolt linux-cpupower systemd-zram-generator
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/

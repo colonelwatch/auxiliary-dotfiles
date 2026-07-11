@@ -26,4 +26,6 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 
 4. Clone this repository with the command `git clone https://github.com/colonelwatch/auxiliary-dotfiles .dotfiles --recurse-submodules`, call `cd .dotfiles && ./bootstrap.sh`
 
-5. Restart
+5. Authorize thunderbolt dock through `boltctl`
+
+6. Restart
