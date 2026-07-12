@@ -10,13 +10,16 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 
 ## Install
 
-2. Booting from the install disk for Debian 13 (non-free drivers now included by default), proceed through the non-graphical install process.
+2. Booting from the install disk for Debian 13, proceed through the non-graphical install process
    - Time zone, keyboard, and language are self-explanatory
+   - Make sure to use Wi-Fi during setup
    - The hostname should be `kenny-auxiliary`
    - Disable the root user (leave the root password empty)
    - Set up the disk as follows:
      - Select a manual install
-     - Create a new partition in the left-behind free space, ensuring that the file system is `btrfs` and the mount point is `/`
+     - Delete every partition on the disk
+     - Create a 1 GB partition (starting from the beginning of the disk) with the EFI file system
+     - Create a partition with all the remaining free space with the BTRFS file system and a mount point of `/`
      - Finish setup, and dismiss the warning about not designating swap
    - Turn off all desktop environments and turn on the SSH server
 
