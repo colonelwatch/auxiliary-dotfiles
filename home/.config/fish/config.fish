@@ -6,7 +6,7 @@ end
 
 set fish_greeting
 
-set -gx EDITOR nvim
+set -gx EDITOR "$HOME/.local/bin/nvim"
 fish_add_path -g "$HOME/.local/bin"
 fish_add_path -g "$HOME/.cargo/bin"
 
