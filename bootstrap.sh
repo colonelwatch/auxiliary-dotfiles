@@ -2,6 +2,10 @@
 
 
 do_setup() {
+    # launch a sudoloop
+    sudo -v
+    while true; do sudo -n -v; sleep 60; kill -0 $$ 2> /dev/null || exit; done &
+
     # some of the script needs access to curl and unzip first
     sudo apt install -y curl unzip
 
