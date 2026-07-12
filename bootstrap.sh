@@ -13,8 +13,8 @@ do_setup() {
 
 do_root() {
     # use NetworkManager and resolved (for mDNS features)
-    sudo apt install -y network-manager systemd-resolved
-    __do_network_manager_changeover
+    sudo apt install -y network-manager systemd-resolved    \
+        && __do_network_manager_changeover
 
     # install kernel and drivers
     sudo apt install -y nvidia-open-kernel-dkms nvidia-driver
@@ -36,35 +36,66 @@ do_root() {
 
 
 __do_network_manager_changeover() {
-    if dpkg-query -Wf'${db:Status-abbrev}' network-manager | grep -q '^i'; then
-        return 0  # network-manager is already installed, so skip
+    if sudo cmp -s root/etc/network/interfaces /etc/network/interfaces; then
+        return 0  # nothing to be done
     fi
 
     # record wifi config from /etc/network/interfaces
-    ssid=$(sudo cat /etc/network/interfaces | grep wpa-ssid | sed 's/\twpa-ssid *//')
-    psk=$(sudo cat /etc/network/interfaces | grep wpa-psk | sed 's/\twpa-psk *//')
+    local ssid psk
+    ssid=$(
+        sudo grep wpa-ssid /etc/network/interfaces |    \
+            head -n1 |                                  \
+            sed 's/^[[:space:]]*wpa-ssid[[:space:]]*//' \
+        || true
+    )
+    psk=$(
+        sudo grep wpa-psk /etc/network/interfaces |     \
+            head -n1 |                                  \
+            sed 's/^[[:space:]]*wpa-psk[[:space:]]*//'  \
+        || true
+    )
 
-    # delete wifi config, thus giving control from networking.service to NetworkManager
-    temp=$(mktemp)
-    sudo cat /etc/network/interfaces | head -8 > "$temp"
-    sudo mv "$temp" /etc/network/interfaces
+    do_service_restart() {
+        sudo systemctl restart networking
+        sudo systemctl restart  \
+            systemd-resolved wpa_supplicant  # NetworkManager dependencies first
+        sudo systemctl restart NetworkManager
+    }
 
-    # Apply transition by restarting networking.service and then restarting
-    # NetworkManager (resolved and NetworkManager are already enabled upon install)
-    sudo systemctl restart networking
-    sudo systemctl restart systemd-resolved wpa_supplicant  # first, dependencies of NM
-    sudo systemctl restart NetworkManager
+    # install a basic interfaces file, preparing to move control from
+    # networking.service to NetworkManager
+    # NOTE: if any of the below steps fail, the Wi-Fi credentials are preserved
+    sudo cp /etc/network/interfaces /etc/network/interfaces.bak
+    # shellcheck disable=SC2329  # SC2329 is a false positive for trap functions
+    do_revert() {
+        trap - RETURN EXIT
+        sudo mv /etc/network/interfaces.bak /etc/network/interfaces
+        do_service_restart
+        unset -f do_revert do_service_restart
+    }
+    trap do_revert RETURN EXIT
+    sudo cp root/etc/network/interfaces /etc/network/interfaces
 
-    sleep 10 # wait for NetworkManager to be ready
+    # apply transition and wait for NetworkManager to be ready
+    do_service_restart
+    sleep 10
 
-    if [ -n "$ssid" -a -n "$psk" ]; then
-        sudo nmcli device wifi connect "$ssid" password "$psk"
+    if [ -n "$ssid" ]; then
+        local connect_args=("$ssid")
+        if [ -n "$psk" ]; then
+            connect_args+=(password "$psk")
+        fi
+        sudo nmcli device wifi connect "${connect_args[@]}"
     fi
 
     if ! ping -c 1 google.com; then
-        echo "no internet connection, check nmtui and run again" 1>&2
+        echo "changeover broke the internet connection, reverting..." 1>&2
         return 1
     fi
+
+    trap - RETURN EXIT
+    sudo rm /etc/network/interfaces.bak
+    unset -f do_revert do_service_restart
 }
 
 
