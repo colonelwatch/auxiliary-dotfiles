@@ -1,12 +1,4 @@
-if status is-interactive
-    # Commands to run in interactive sessions can go here
-    macchina
-    fish_config theme choose "Solarized Light"
-end
-
-set fish_greeting
-
-set -gx EDITOR "$HOME/.local/bin/nvim"
+# update path
 fish_add_path -g "$HOME/.local/bin"
 fish_add_path -g "$HOME/.cargo/bin"
 
@@ -19,3 +11,11 @@ pyenv init - fish | source
 set -gx PYTHON_CONFIGURE_OPTS '--enable-optimizations --with-lto'
 set -gx PYTHON_CFLAGS '-march=native -mtune=native'
 set -gx MAKE_OPTS "-j$(nproc)"
+
+if status is-interactive
+    # Commands to run in interactive sessions can go here
+    macchina
+    fish_config theme choose "Solarized Light"
+    set fish_greeting
+    set -gx EDITOR "$HOME/.local/bin/nvim"
+end
