@@ -8,6 +8,7 @@ set fish_greeting
 
 set -gx EDITOR nvim
 fish_add_path -g "$HOME/.local/bin"
+fish_add_path -g "$HOME/.cargo/bin"
 
 # pyenv
 set -gx PYENV_ROOT "$HOME/.pyenv"
