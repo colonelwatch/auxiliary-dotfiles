@@ -32,3 +32,7 @@ Oh, I'll end up nuking my auxiliary server for sure, so this repo documents ever
 5. Authorize thunderbolt dock through `boltctl`
 
 6. Restart
+
+## Post-boostrap
+
+7. Authorize Git over HTTPS with GitHub with the command `gh auth login`.
