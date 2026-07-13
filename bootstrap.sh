@@ -20,8 +20,9 @@ do_root() {
     sudo apt install -y network-manager systemd-resolved    \
         && __do_network_manager_changeover
 
-    # install kernel and drivers
-    sudo apt install -y nvidia-open-kernel-dkms nvidia-driver
+    # install Nvidia driver (and the needed kernel headers for DKMS)
+    sudo apt install -y     \
+        linux-headers-generic nvidia-open-kernel-dkms nvidia-driver
 
     # install services
     sudo apt install -y bolt linux-cpupower systemd-zram-generator
