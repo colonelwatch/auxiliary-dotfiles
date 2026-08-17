@@ -25,7 +25,8 @@ do_root() {
         linux-headers-generic nvidia-open-kernel-dkms nvidia-driver
 
     # install services
-    sudo apt install -y bolt linux-cpupower systemd-zram-generator
+    sudo apt install -y bolt linux-cpupower systemd-timesyncd   \
+        systemd-zram-generator
 
     # install config files
     sudo cp -rvf --no-preserve=mode,ownership root/etc/* /etc/
